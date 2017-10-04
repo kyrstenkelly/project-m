@@ -1,6 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Avatar, Button, Text } from 'react-native-elements';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Avatar, Icon, Text } from 'react-native-elements';
 
 import styles from '../styles/profile';
 import kyrsten from '../images/kyrsten.jpg';
@@ -16,12 +16,7 @@ class Profile extends React.Component {
   // }
 
   componentWillMount() {
-    // getUserInfo().then(res => {
-    //   console.log(`User Info ${res}`);
-    //   this.setState({userInfo:res})
-    // }).catch(err => {
-    //   console.log(err);
-    // });
+    // TODO: Get user info from back end
     this.setState({
       userInfo: {
         firstName: 'Kyrsten',
@@ -30,23 +25,32 @@ class Profile extends React.Component {
         company: 'Udacity',
         age: 26,
         about: 'I\'m a full stack developer at Udacity. I\'ve been doing software development professionally for 5 years.',
-        skills: ['Software Development', 'Dancing', 'Ukulele'],
+        skills: ['Software Development', 'Swing Dancing', 'Blues Dancing', 'Ukulele', 'Guitar'],
         interests: ['Yoga', 'Arial Silks'],
       },
     });
   }
 
-  getInterestsList(interests) {
-    return interests.map((interest, i) =>
-      <Text key={i} style={styles.interest}>{interest}</Text>);
+  getHobbyList(hobbies, isSkill) {
+    const firstName = this.state.userInfo.firstName.toLowerCase();
+    const hobbyStyles = isSkill ? styles.skill : styles.interest;
+    return hobbies.map(hobby =>
+      (<Text
+        key={`${firstName}-${hobby}`}
+        style={StyleSheet.flatten([styles.hobby, hobbyStyles])}
+      >
+        {hobby}
+      </Text>),
+    );
   }
 
   render() {
     const { userInfo } = this.state;
-    const Interests = this.getInterestsList(userInfo.interests);
+    const Skills = this.getHobbyList(userInfo.skills, true);
+    const Interests = this.getHobbyList(userInfo.interests, false);
 
     return (
-      <View style={styles.view}>
+      <ScrollView style={styles.view}>
         <Avatar
           xlarge
           avatarStyle={styles.avatar}
@@ -63,11 +67,19 @@ class Profile extends React.Component {
             <Text>{userInfo.about}</Text>
           </View>
           <View style={styles.section}>
+            <Text style={styles.sectionLabel}>Skills</Text>
+            <View style={styles.hobbiesContainer}>
+              {Skills}
+            </View>
+          </View>
+          <View style={styles.section}>
             <Text style={styles.sectionLabel}>Interests</Text>
-            {Interests}
+            <View style={styles.hobbiesContainer}>
+              {Interests}
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -78,14 +90,26 @@ Profile.navigationOptions = (props) => {
 
   return {
     headerTitle: 'Profile',
+    headerStyle: {
+      backgroundColor: 'black',
+    },
+    headerTitleStyle: {
+      color: 'white',
+    },
     headerLeft: (
-      <Button
-        title="Menu"
+      <Icon
+        name="menu"
+        size={30}
+        color="#fff"
+        style={styles.menuIcon}
       />
     ),
     headerRight: (
-      <Button
-        title="Edit"
+      <Icon
+        name="edit"
+        size={25}
+        color="#fff"
+        style={styles.editIcon}
         onPress={() =>
           setParams({ mode: state.mode === 'edit' ? '' : 'edit' })}
       />

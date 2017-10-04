@@ -1,16 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 import { createRootNavigator } from './router';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default class App extends React.Component {
   constructor(props) {
@@ -36,10 +26,10 @@ export default class App extends React.Component {
 
     if (!checkedSignIn) {
       Layout = createRootNavigator(false);
-      return <Layout style={styles} />;
+      return <Layout />;
     }
 
     Layout = createRootNavigator(signedIn);
-    return <Layout style={styles} />;
+    return <Layout />;
   }
 }
